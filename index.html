@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#3b1f5e">
+  <meta name="description" content="Командна гра онлайн: поясни слово, не називаючи його. Кожен грає зі свого пристрою в одній кімнаті.">
+  <title>Поясни слово</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-bar">
+    <h1>Поясни слово</h1>
+    <span id="roomBadge" class="badge" hidden></span>
+    <button id="installBtn" class="install" hidden>Встановити</button>
+  </header>
+
+  <main>
+    <!-- Вхід у кімнату -->
+    <section id="joinScreen" class="screen">
+      <form id="joinForm" class="panel">
+        <p class="hint">Кожен грає зі свого телефона чи компʼютера. Усі вводять <b>однакову</b> назву кімнати і пароль. Голосом спілкуйтеся в дзвінку (Discord, Zoom, Meet).</p>
+        <label>Ваше імʼя
+          <input id="nameInput" type="text" required maxlength="20" autocomplete="nickname">
+        </label>
+        <label>Назва кімнати
+          <input id="roomInput" type="text" required maxlength="40" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="наприклад, група31">
+        </label>
+        <label>Пароль кімнати
+          <input id="passwordInput" type="password" required minlength="4" maxlength="64" autocomplete="off">
+        </label>
+        <button type="submit" id="joinBtn" class="big">Увійти в кімнату</button>
+        <p id="joinError" class="error" hidden></p>
+      </form>
+    </section>
+
+    <!-- Лобі -->
+    <section id="lobbyScreen" class="screen" hidden>
+      <div class="panel">
+        <h2>Гравці</h2>
+        <div id="teamsView" class="teams"></div>
+        <p class="hint">Торкніться команди, щоб перейти в неї. У кожній команді має бути щонайменше двоє.</p>
+      </div>
+      <div id="hostSettings" class="panel" hidden>
+        <h2>Налаштування (ви ведучий)</h2>
+        <label class="inline">Команд
+          <select id="teamCountInput"><option>2</option><option>3</option><option>4</option></select>
+        </label>
+        <label class="inline">Раунд, секунд
+          <select id="secondsInput"><option>30</option><option selected>60</option><option>90</option></select>
+        </label>
+        <label class="inline">Гра до
+          <select id="targetInput"><option>20</option><option selected>30</option><option>50</option></select>
+        </label>
+        <div id="deckInputs" class="choice"></div>
+        <label class="check"><input type="checkbox" id="penaltyInput" checked> Пропуск слова — мінус очко</label>
+        <button id="startBtn" class="big">Почати гру</button>
+        <p id="startHint" class="hint"></p>
+      </div>
+      <p id="lobbyWait" class="panel center hint" hidden>Чекаємо, поки ведучий почне гру…</p>
+    </section>
+
+    <!-- Гра: вміст залежить від ролі гравця -->
+    <section id="gameScreen" class="screen" hidden>
+      <div class="play-top">
+        <span id="turnInfo"></span>
+        <span id="timer" class="timer" hidden></span>
+      </div>
+
+      <div id="roleView"></div>
+
+      <div class="panel">
+        <h2>Рахунок</h2>
+        <ol id="scoreBoard" class="scores"></ol>
+      </div>
+    </section>
+  </main>
+
+  <script src="words.js"></script>
+  <script src="net.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
