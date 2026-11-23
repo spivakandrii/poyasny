@@ -485,7 +485,7 @@ function renderGame() {
       panel.append(el('p', 'role-note', 'Пояснює ' + explainer + '.'));
     } else {
       panel.append(el('p', 'big-text', 'Хід команди «' + team + '»'));
-      panel.append(el('p', 'role-note', 'Ви бачитимете слова і слідкуватимете за чесністю.'));
+      panel.append(el('p', 'role-note', 'Слухайте пояснення: усі слова покажемо після раунду. Останнє слово можете вгадати й ви!'));
     }
     view.append(panel);
   } else if (state.phase === 'play') {
@@ -504,14 +504,16 @@ function renderGame() {
       panel.append(el('p', 'role-note', 'Пояснює ' + explainer));
       view.append(panel);
     } else {
-      view.append(wordCard(state.word, true));
-      view.append(el('p', 'role-note', 'Пояснює ' + explainer + '. Слідкуйте, щоб слово і спільнокореневі не звучали.'));
+      const panel = el('div', 'panel center');
+      panel.append(el('p', 'big-text', 'Слухайте!'));
+      panel.append(el('p', 'role-note', 'Пояснює ' + explainer + ' для команди «' + team + '». Слова покажемо після раунду.'));
+      view.append(panel);
     }
     view.append(el('p', 'big-text', 'Вгадано: ' + guessed));
   } else if (state.phase === 'last') {
     const panel = el('div', 'panel center');
     panel.append(el('p', 'eyebrow', 'Час вийшов! Останнє слово'));
-    if (explaining || !sameTeam) {
+    if (explaining) {
       panel.append(el('p', 'word small-word', state.lastWord));
     }
     if (explaining) {
@@ -527,7 +529,8 @@ function renderGame() {
       stack.append(nobody);
       panel.append(stack);
     } else {
-      panel.append(el('p', 'hint', 'Останнє слово може вгадати будь-яка команда! ' + explainer + ' відмітить, хто встиг.'));
+      panel.append(el('p', 'big-text', 'Вгадують усі!'));
+      panel.append(el('p', 'hint', 'Останнє слово може вгадати будь-яка команда. ' + explainer + ' відмітить, хто встиг першим.'));
     }
     view.append(panel);
   } else if (state.phase === 'review') {
@@ -548,11 +551,11 @@ function renderGame() {
     panel.append(list);
     const skipped = state.roundWords.length - guessed;
     const points = guessed - (state.settings.penalty ? skipped : 0);
-    let total = 'Очки за раунд: ' + points;
-    if (state.lastTeam !== null) {
-      total += ' · останнє слово (' + state.lastWord + '): +1 «' + TEAM_NAMES[state.lastTeam] + '»';
+    panel.append(el('p', 'total', 'Очки за раунд: ' + points));
+    if (state.lastWord) {
+      const lastResult = state.lastTeam === null ? 'ніхто не вгадав' : '+1 «' + TEAM_NAMES[state.lastTeam] + '»';
+      panel.append(el('p', 'role-note', 'Останнє слово «' + state.lastWord + '»: ' + lastResult));
     }
-    panel.append(el('p', 'total', total));
     if (explaining) {
       const next = el('button', 'big', 'Далі');
       next.addEventListener('click', () => act('next'));
